@@ -1,0 +1,19 @@
+{
+  "name": "omii",
+  "version": "1.0.0",
+  "description": "OMI的扩展与实践，WebComponents是个好东西，OMI是个好工具",
+  "devDependencies": {
+    "esbuild": "^0.14.49"
+  },
+  "scripts": {
+    "build": "node esbuild.js",
+    "build:mini": "node esbuild.js minify"
+  },
+  "dependencies": {
+    "htm": "^3.1.1",
+    "omi": "^6.25.9",
+    "omi-binding": "^1.0.1",
+    "omi-router": "^3.0.2",
+    "throttle-debounce": "^5.0.0"
+  }
+}
