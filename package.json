@@ -1,5 +1,5 @@
 {
-  "name": "omii",
+  "name": "@lv-saharan/omii",
   "version": "1.0.0",
   "description": "OMI的扩展与实践，WebComponents是个好东西，OMI是个好工具",
   "devDependencies": {
