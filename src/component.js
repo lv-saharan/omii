@@ -52,17 +52,22 @@ export default class extends WeElement {
 
     async connectedCallback() {
         this.attrsToProps()
-        if (typeof this.props.settings === "object") {
-            this.settings = this.props.settings
+
+        //props 中如果是非object类型在update过程中会引起值的回退
+        //增加settings 绑定可以将需要保持状态的值封装成对象传值
+        let $props = this.props.settings ?? this.props.props
+        if ($props && typeof $props === "object") {
+            this.settings = $props
             for (let pp in this.props) {
-                if (pp !== "settings" && pp !== "children" && !this.settings.hasOwnProperty(pp)) {
+                if (pp !== "settings" && pp !== "props" && pp !== "children" && !this.settings.hasOwnProperty(pp)) {
                     this.settings[pp] = this.props[pp]
                 }
             }
-
         } else {
             this.settings = this.props
         }
+
+        this.$props = this.settings
 
         let shadowRoot
         if (this.constructor.isLightDom) {
