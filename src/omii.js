@@ -23,7 +23,7 @@ import {
     unbind
 } from 'omi/src/omi'
 
-import apis from './apis'
+import apis from "dynamic-apis"
 
 import htm from 'htm'
 

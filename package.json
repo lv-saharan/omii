@@ -1,6 +1,6 @@
 {
   "name": "@lv-saharan/omii",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "OMI的扩展与实践，WebComponents是个好东西，OMI是个好工具;文档帮助准备中...",
   "main": "src/omii.js",
   "repository": {
@@ -17,6 +17,7 @@
     "web components",
     "web component",
     "api",
+    "apis",
     "fast",
     "esbuild",
     "data-binding"
@@ -35,6 +36,7 @@
     "build:mini": "node esbuild.js minify"
   },
   "dependencies": {
+    "dynamic-apis": "^1.0.0",
     "htm": "^3.1.1",
     "omi": "^6.25.9",
     "omi-binding": "^1.0.1",
