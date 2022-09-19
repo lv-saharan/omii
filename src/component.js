@@ -54,20 +54,18 @@ export default class extends WeElement {
         this.attrsToProps()
 
         //props 中如果是非object类型在update过程中会引起值的回退
-        //增加settings 绑定可以将需要保持状态的值封装成对象传值
-        let $props = this.props.settings ?? this.props.props
+        //增加props 绑定可以将需要保持状态的值封装成对象传值
+        let $props = this.props.props
         if ($props && typeof $props === "object") {
-            this.settings = $props
+            this.$props = $props
             for (let pp in this.props) {
-                if (pp !== "settings" && pp !== "props" && pp !== "children" && !this.settings.hasOwnProperty(pp)) {
-                    this.settings[pp] = this.props[pp]
+                if (pp !== "props" && pp !== "children" && !$props.hasOwnProperty(pp)) {
+                    $props[pp] = this.props[pp]
                 }
             }
         } else {
-            this.settings = this.props
+            this.$props = this.props
         }
-
-        this.$props = this.settings
 
         let shadowRoot
         if (this.constructor.isLightDom) {
@@ -121,7 +119,7 @@ export default class extends WeElement {
     }
     //性能应该没有多大影响，会使updateStyles 插入时splice index+2
     get themeCSSStyleSheet() {
-        if (!this.settings.themeCss) {
+        if (!this.$props.themeCss) {
             let host = getHost(this)
             if (!host) {
                 return this.#css.theme_cssstylesheet
@@ -129,12 +127,12 @@ export default class extends WeElement {
             return host.themeCSSStyleSheet
         } else {
 
-            if (this.settings.themeCss instanceof CSSStyleSheet) {
-                return this.settings.themeCss
+            if (this.$props.themeCss instanceof CSSStyleSheet) {
+                return this.$props.themeCss
             }
 
-            if (this.settings.themeCss != this.#css.theme_css) {
-                this.#css.theme_css = this.settings.themeCss
+            if (this.$props.themeCss != this.#css.theme_css) {
+                this.#css.theme_css = this.$props.themeCss
                 this.#css.theme_cssstylesheet.replace(this.#css.theme_css)
             }
             return this.#css.theme_cssstylesheet
@@ -279,12 +277,11 @@ export default class extends WeElement {
         await this.update(true, true)
     }
 
-    updateSettings(obj, ignoreAttrs = true, updateSelf = false, updateAttrs = false) {
+    update$Props(obj, ignoreAttrs = true, updateSelf = false, updateAttrs = false) {
         Object.keys(obj).forEach(key => {
             let value = obj[key]
-            this.props[key] = value
-            this.settings[key] = value
-            if (this.prevProps) {
+            this.$props[key] = value
+            if (this.prevProps && this.$props == this.props) {
                 this.prevProps[key] = value
             }
             if (updateAttrs) {
@@ -293,7 +290,6 @@ export default class extends WeElement {
         })
         this.update(ignoreAttrs, updateSelf)
     }
-
 
     attrsToProps(ignoreAttrs) {
         if (ignoreAttrs || this.props.ignoreAttrs) return
