@@ -43,6 +43,8 @@ import { setTheme } from './theme'
 
 import { purgeCSSSS, purgeCSS } from './stylesheet'
 
+import { observe, unobserve } from "observing"
+
 import 'omi-binding'
 export {
     tag,
@@ -77,9 +79,9 @@ export {
     debounce,
     setTheme,
     purgeCSS,
-    purgeCSSSS
+    purgeCSSSS, observe, unobserve
 }
-const version = "1.0.0"
-const omii = options.root.omii = { ...options.root.omi, version, Component, route, apis, html, uniqueTag, updateTargets, throttle, debounce, setTheme, purgeCSS, purgeCSSSS }
+const version = "1.0.3"
+const omii = options.root.omii = { ...options.root.omi, version, Component, route, apis, html, uniqueTag, updateTargets, throttle, debounce, setTheme, purgeCSS, purgeCSSSS, observe, unobserve }
 export default omii
 

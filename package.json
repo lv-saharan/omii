@@ -1,6 +1,6 @@
 {
   "name": "@lv-saharan/omii",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "OMI的扩展与实践，WebComponents是个好东西，OMI是个好工具;文档帮助准备中...",
   "main": "src/omii.js",
   "repository": {
@@ -38,6 +38,7 @@
   "dependencies": {
     "dynamic-apis": "^1.0.0",
     "htm": "^3.1.1",
+    "observing": "^1.0.1",
     "omi": "^6.25.9",
     "omi-binding": "^1.0.1",
     "omi-router": "^3.0.2",
