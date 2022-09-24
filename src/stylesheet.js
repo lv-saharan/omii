@@ -11,7 +11,6 @@ const createStyleSheets = (hrefs) => {
 const purgeCSSSS = async (css, owner) => {
     return purgeCSS(css, owner, true)
 }
-const cssFuncMap = new WeakMap()
 
 const purgeCSS = async (css, owner, buildCSSStyleSheet = false) => {
     const cssss = []
@@ -22,27 +21,10 @@ const purgeCSS = async (css, owner, buildCSSStyleSheet = false) => {
             _css = await _css
         }
         if (!_css) continue
-
         if (typeof _css == "function") {
-            let funcCSS = cssFuncMap.get(_css)
-            if (typeof funcCSS === "undefined") {
-                cssFuncMap.set(_css, funcCSS = [])
-                funcCSS.__f__ = true
-                //执行一次？
-                const result = _css.call(owner)
-                //执行的快慢都有可能
-                cssFuncMap.set(_css, result)
-                stack.unshift(result)
-                continue
-            } else if (funcCSS instanceof Array && funcCSS.__f__ === true) {
-                //多线程！
-                stack.unshift(new Promise((resolve) => {
-                    funcCSS.push(resolve);
-                }))
-                continue
-            }
-            stack.unshift(funcCSS)
-
+            const result = _css.call(owner)
+            stack.unshift(result)
+            continue
         }
         if (_css instanceof Array) {
             stack.unshift(..._css)

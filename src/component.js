@@ -152,7 +152,7 @@ export default class extends WeElement {
                 resolves.forEach(resolve => {
                     resolve(cssss)
                 })
-            } else if (cssss instanceof Array && cssss.__r__ == true) {
+            } else if (cssss instanceof Array && cssss.__r__) {
                 let resolves = cssss
                 cssss = await new Promise(resolve => {
                     resolves.push(resolve)
