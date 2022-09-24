@@ -1,7 +1,8 @@
 
 let pkg = require('./package.json')
 let [mode] = process.argv.splice(2);
-let outfile = `../es-lib/omii/${pkg.version}/omii.js`;
+//let outfile = `../es-lib/omii/${pkg.version}/omii.js`;
+let outfile = `./dist/omii/latest/omii.js`;
 //let outfile = `../es-lib/omii/latest/omii.js`;
 let options = {
     entryPoints: ['src/omii.js'],
