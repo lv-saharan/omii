@@ -36,7 +36,7 @@
     "build:mini": "node esbuild.js minify"
   },
   "dependencies": {
-    "dynamic-apis": "^1.0.0",
+    "dynamic-apis": "^1.0.1",
     "htm": "^3.1.1",
     "observing": "^1.0.1",
     "omi": "^6.25.9",
