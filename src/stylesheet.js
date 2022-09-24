@@ -48,7 +48,6 @@ const purgeCSS = async (css, owner, buildCSSStyleSheet = false) => {
         if (_css instanceof CSSStyleSheet) {
             cssss.push(_css)
         }
-
     }
     return cssss
 }
