@@ -210,7 +210,7 @@ export default class extends WeElement {
 
 
         const stylesheets = await purgeCSS(this.stylesheets, this);
-        stylesheets.push(...await purgeCSS(this.props.stylesheets, getHost(this)))
+        stylesheets.push(...await purgeCSS(this.props.styleSheets, getHost(this)))
 
         const stylesheetMap = this.#css.stylesheetMap
         const exsistStylesheets = new Set(stylesheetMap.keys())
