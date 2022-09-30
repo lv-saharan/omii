@@ -90,6 +90,7 @@ export default class extends WeElement {
         options.afterInstall && await options.afterInstall(this)
         const rendered = await this.render(this.props, this.store)
         await this.rendered()
+        await this.#initStyle()
         this.rootNode = diff(null, rendered, null, this)
         if (isArray(this.rootNode)) {
             this.rootNode.forEach(function (item) {
@@ -98,7 +99,6 @@ export default class extends WeElement {
         } else {
             this.rootNode && shadowRoot.appendChild(this.rootNode)
         }
-        await this.#initStyle()
         await this.installed()
         this.isInstalled = true
         this.fire("installed")
@@ -210,7 +210,7 @@ export default class extends WeElement {
 
 
         const stylesheets = await purgeCSS(this.stylesheets, this);
-        stylesheets.push(...await purgeCSS(this.props.stylesheets, getHost(this)))
+        stylesheets.push(...await purgeCSS(this.props.styleSheets, getHost(this)))
 
         const stylesheetMap = this.#css.stylesheetMap
         const exsistStylesheets = new Set(stylesheetMap.keys())
@@ -255,6 +255,7 @@ export default class extends WeElement {
             this.attrsToProps(ignoreAttrs)
             const rendered = await this.render(this.props, this.store)
             await this.rendered()
+            await this.updateStyle()
             this.rootNode = diff(
                 this.rootNode,
                 rendered,
@@ -262,7 +263,6 @@ export default class extends WeElement {
                 this,
                 updateSelf
             )
-            await this.updateStyle()
         }
         finally {
             this._willUpdate = false
