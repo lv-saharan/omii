@@ -1,6 +1,6 @@
 {
   "name": "@lv-saharan/omii",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "OMI的扩展与实践，WebComponents是个好东西，OMI是个好工具;文档帮助准备中...",
   "main": "src/omii.js",
   "repository": {
