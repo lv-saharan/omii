@@ -81,7 +81,7 @@ export {
     purgeCSS,
     purgeCSSSS, observe, unobserve
 }
-const version = "1.0.3"
+const version = "1.0.8"
 const omii = options.root.omii = { ...options.root.omi, version, Component, route, apis, html, uniqueTag, updateTargets, throttle, debounce, setTheme, purgeCSS, purgeCSSSS, observe, unobserve }
 export default omii
 
