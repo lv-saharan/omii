@@ -3,6 +3,20 @@ omi + i
 
 omii更多关注 esmodule的项目开发。
 
+
+# getting start
+
+## install
+```bash
+npm i omii-cli -g
+```
+## create app
+```
+omii create my-app
+cd ./my-app
+npm i
+npm start
+```
 # Target
 增加一些OMI支持和关注，构建一个allinone的开发环境！
 
