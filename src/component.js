@@ -355,11 +355,13 @@ export default class extends WeElement {
     }
 
 
-    fire(name, data, cancelable = false, bubbles = false) {
+    //composed =true 可以让事件传出组件
+    fire(name, data, { cancelable = false, bubbles = false, composed = false } = {}) {
         let customEvent = new CustomEvent(name, {
             detail: data,
             cancelable,
-            bubbles
+            bubbles,
+            composed
         })
         const handler = this.props[`on${capitalize(name)}`]
         if (typeof handler === "function") {
