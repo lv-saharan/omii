@@ -36,11 +36,11 @@
     "build:mini": "node esbuild.js minify"
   },
   "dependencies": {
-    "dynamic-apis": "^1.0.6",
+    "dynamic-apis": "^1.0.7",
     "htm": "^3.1.1",
     "observing": "^1.0.1",
     "omi": "^6.25.9",
-    "omi-binding": "^1.0.1",
+    "omi-binding": "^1.0.3",
     "omi-router": "^3.0.2",
     "throttle-debounce": "^5.0.0"
   }
