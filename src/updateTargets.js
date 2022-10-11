@@ -1,4 +1,4 @@
-import { elements } from 'omi/src/omi'
+import { elements } from './omi'
 function handleTargets(targets, parent) {
     let $targets = []
     if (!targets) return $targets

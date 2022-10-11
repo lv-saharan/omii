@@ -21,7 +21,7 @@ import {
     set,
     bind,
     unbind
-} from 'omi/src/omi'
+} from './omi'
 
 import apis from "dynamic-apis"
 
@@ -45,7 +45,7 @@ import { purgeCSSSS, purgeCSS } from './stylesheet'
 
 import { observe, unobserve } from "observing"
 
-import 'omi-binding'
+import './binding'
 export {
     tag,
     WeElement,
@@ -81,7 +81,7 @@ export {
     purgeCSS,
     purgeCSSSS, observe, unobserve
 }
-const version = "1.0.8"
+const version = "1.0.11"
 const omii = options.root.omii = { ...options.root.omi, version, Component, route, apis, html, uniqueTag, updateTargets, throttle, debounce, setTheme, purgeCSS, purgeCSSSS, observe, unobserve }
 export default omii
 

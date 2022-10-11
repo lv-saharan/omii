@@ -1,4 +1,4 @@
-import { define } from "omi/src/define"
+import { define } from "./define"
 const classTagMap = new Map()
 const prefixMap = new Map()
 

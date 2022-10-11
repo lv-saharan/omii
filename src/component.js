@@ -1,6 +1,6 @@
-import { isArray, capitalize, hyphenate } from 'omi/src/util'
-import { diff } from 'omi/src/vdom/diff'
-import { WeElement, options, getHost } from 'omi/src/omi'
+import { isArray, capitalize, hyphenate } from './util'
+import { diff } from './vdom/diff'
+import { WeElement, options, getHost } from './omi'
 import { createStyleSheets, createStyleSheet, purgeCSSSS, purgeCSS } from './stylesheet'
 import { updateTargets } from './updateTargets'
 import { throttle } from 'throttle-debounce'
@@ -91,7 +91,7 @@ export default class extends WeElement {
         const rendered = await this.render(this.props, this.store)
         await this.rendered()
         await this.#initStyle()
-        this.rootNode = diff(null, rendered, null, this)
+        this.rootNode = await diff(null, rendered, null, this)
         if (isArray(this.rootNode)) {
             this.rootNode.forEach(function (item) {
                 shadowRoot.appendChild(item)
@@ -256,7 +256,7 @@ export default class extends WeElement {
             const rendered = await this.render(this.props, this.store)
             await this.rendered()
             await this.updateStyle()
-            this.rootNode = diff(
+            this.rootNode = await diff(
                 this.rootNode,
                 rendered,
                 this.constructor.isLightDom ? this : this.shadowRoot,
@@ -271,7 +271,7 @@ export default class extends WeElement {
     }
     lazyUpdate = throttle(UpdateInterval, (ignoreAttrs, updateSelf) => {
         this.update(ignoreAttrs, updateSelf)
-    })
+    }, { noLeading: true })
 
     async forceUpdateSelf() {
         await this.update(true, true)

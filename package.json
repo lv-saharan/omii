@@ -1,6 +1,6 @@
 {
   "name": "@lv-saharan/omii",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "OMII,OMI + I ,quick web framework!",
   "main": "src/omii.js",
   "repository": {
@@ -32,16 +32,15 @@
     "esbuild": "^0.14.49"
   },
   "scripts": {
-    "build": "node esbuild.js",
-    "build:mini": "node esbuild.js minify"
+    "build": "node esbuild.js minify"
   },
   "dependencies": {
+    "construct-style-sheets-polyfill": "^3.1.0",
     "dynamic-apis": "^1.0.7",
     "htm": "^3.1.1",
     "observing": "^1.0.1",
-    "omi": "^6.25.9",
-    "omi-binding": "^1.0.3",
     "omi-router": "^3.0.2",
-    "throttle-debounce": "^5.0.0"
+    "throttle-debounce": "^5.0.0",
+    "weakmap-polyfill": "^2.0.4"
   }
 }
