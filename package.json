@@ -1,8 +1,15 @@
 {
   "name": "@lv-saharan/omii",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "OMII,OMI + I ,quick web framework!",
   "main": "src/omii.js",
+  "type": "module",
+  "localDev": {
+    "server": {
+      "port": 8990,
+      "root": "./dist"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lv-saharan/omii.git"
@@ -29,10 +36,12 @@
   },
   "homepage": "https://github.com/lv-saharan/omii#readme",
   "devDependencies": {
-    "esbuild": "^0.14.49"
+    "esbuild": "^0.14.49",
+    "local-dev-server": "^1.0.11"
   },
   "scripts": {
-    "build": "node esbuild.js minify"
+    "dev": "node esbuild.js dev",
+    "build": "node esbuild.js prod"
   },
   "dependencies": {
     "construct-style-sheets-polyfill": "^3.1.0",
