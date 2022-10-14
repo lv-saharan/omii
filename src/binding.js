@@ -15,7 +15,7 @@ const updateSelect = (el, path, scope) => {
     let val = get(scope, path)
     if (val instanceof Array && el.multiple) {
         Array.from(el.options).forEach(option => {
-            if (val.some(v => v.toString() == option.value)) {
+            if (val.some(v => v == option.value)) {
                 option.selected = true
             } else {
                 option.selected = false
@@ -27,7 +27,7 @@ const updateSelect = (el, path, scope) => {
     if (val === false || val === null || val === undefined) {
         val = ''
     }
-    el.value = val.toString()
+    el.value = val
 
 }
 /**
@@ -51,7 +51,7 @@ addBindingHandler((el, path, scope) => {
 const updateRadio = (el, path, scope) => {
     let val = get(scope, path)
     if (val instanceof Array) {
-        el.checked = val.some(v => v.toString() == el.value)
+        el.checked = val.some(v => v == el.value)
         return
     }
     el.checked = get(scope, path) == el.value
@@ -79,7 +79,7 @@ const updateCheckbox = (el, path, scope) => {
     const tureVal = el.getAttribute('o-true-value') || true
     let value = get(scope, path)
     if (value instanceof Array) {
-        el.checked = value.some(v => v.toString() == el.value)
+        el.checked = value.some(v => v == el.value)
     } else {
         el.checked = value === tureVal
     }
