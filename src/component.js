@@ -13,6 +13,7 @@ const adoptedStyleSheetsMap = new WeakMap()
 //小程序目前也只支持adoptedStylesheets数组赋值
 export default class extends WeElement {
     #store = null
+
     get store() {
         if (this.#store) return this.#store
         let p = this.parentNode
@@ -51,6 +52,9 @@ export default class extends WeElement {
     }
 
     async connectedCallback() {
+        //防止没有初始化完成时调用update
+        this._willUpdate = true
+        //////////////////////////////////////////////////////////
         this.attrsToProps()
 
         //props 中如果是非object类型在update过程中会引起值的回退
@@ -101,7 +105,11 @@ export default class extends WeElement {
         }
         await this.installed()
         this.isInstalled = true
+        //防止没有初始化完成时调用update
+        this._willUpdate = false
+        //////////////////////////////////////////////////////////
         this.fire("installed")
+
     }
     async disconnectedCallback() {
         await this.uninstall()
