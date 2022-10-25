@@ -107,6 +107,9 @@ export default class extends WeElement {
         this.isInstalled = true
         //防止没有初始化完成时调用update
         this._willUpdate = false
+        if (this.#waitingUpdate !== false) {
+            this.#waitingUpdate()
+        }
         //////////////////////////////////////////////////////////
         this.fire("installed")
 
@@ -253,8 +256,18 @@ export default class extends WeElement {
         updateTargets(targets, this.shadowRoot ?? this, ignoreAttrs, cascade)
     }
 
+    #waitingUpdate = false
     async update(ignoreAttrs, updateSelf) {
-        if (this._willUpdate === true) return
+        if (this._willUpdate === true) {
+            if (this.#waitingUpdate === false) {
+                this.#waitingUpdate = () => {
+                    this.#waitingUpdate = false
+                    this.update(ignoreAttrs, updateSelf)
+                }
+            }
+
+            return
+        }
         this._willUpdate = true
         try {
             await this.beforeUpdate()
@@ -274,7 +287,11 @@ export default class extends WeElement {
         }
         finally {
             this._willUpdate = false
+            if (this.#waitingUpdate !== false) {
+                this.#waitingUpdate()
+            }
             await this.updated()
+
         }
     }
     lazyUpdate = throttle(UpdateInterval, (ignoreAttrs, updateSelf) => {
