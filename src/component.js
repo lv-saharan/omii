@@ -17,7 +17,7 @@ export default class extends WeElement {
 
     get store() {
         if (this.#store) {
-            return Reflect.ownKeys(this.#store).length == 0 ? options.store : this.#store
+            return this.#store
         }
         let p = this.parentNode
         //need test getrootnode
@@ -62,7 +62,7 @@ export default class extends WeElement {
 
         //props 中如果是非object类型在update过程中会引起值的回退
         //增加props 绑定可以将需要保持状态的值封装成对象传值
-        let $props = this.props.props??this.getAttribute("props")
+        let $props = this.props.props ?? this.getAttribute("props")
         //处理html标签绑定
         if (typeof $props === "string") {
             const host = getHost(this)
