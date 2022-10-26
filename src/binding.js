@@ -1,4 +1,5 @@
 import { extend, get, set, bind, unbind } from './extend'
+
 const BINDING_HANDLERS = []
 
 const addBindingHandler = handler => {
@@ -142,6 +143,32 @@ addBindingHandler((el, path, scope) => {
         return updateInput
     }
 })
+
+//input
+
+const updateComponent = (el, path, scope) => {
+    el.value = get(scope, path)
+    // checkRequired(el)
+}
+/**
+ * add customEl binding handler
+ */
+addBindingHandler((el, path, scope) => {
+    if (Reflect.has(el, "value")) {
+        unbind(el, 'change')
+        bind(el, 'change', () => {
+            const value = get(scope, path)
+            if (value instanceof Array) {
+                value.splice(0, value.length, el.value)
+            } else {
+                set(scope, path, el.value)
+            }
+        })
+
+        return updateComponent
+    }
+})
+
 
 extend('model', (el, path, scope) => {
     let raw = scope

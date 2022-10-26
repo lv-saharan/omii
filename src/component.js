@@ -1,5 +1,6 @@
 import { isArray, capitalize, hyphenate } from './util'
 import { diff } from './vdom/diff'
+import { get } from './extend'
 import { WeElement, options, getHost } from './omi'
 import { createStyleSheets, createStyleSheet, purgeCSSSS, purgeCSS } from './stylesheet'
 import { updateTargets } from './updateTargets'
@@ -15,11 +16,13 @@ export default class extends WeElement {
     #store = null
 
     get store() {
-        if (this.#store) return this.#store
+        if (this.#store) {
+            return Reflect.ownKeys(this.#store).length == 0 ? options.store : this.#store
+        }
         let p = this.parentNode
         //need test getrootnode
         while (p && !p.store) {
-            p = p.parentNode || p.host
+            p = p.parentNode ?? p.host
         }
         if (p) this.#store = p.store
         // //子节点就不用再遍历到document了
@@ -39,11 +42,11 @@ export default class extends WeElement {
             let provide
             while (p && !provide) {
                 provide = p.provide
-                p = p.parentNode || p.host
+                p = p.parentNode ?? p.host
             }
             if (provide) {
                 this.inject.forEach(injectKey => {
-                    this.injection[injectKey] = provide[injectKey]
+                    this.#injection[injectKey] = provide[injectKey]
                 })
             } else {
                 throw 'The provide prop was not found on the parent node or the provide type is incorrect.'
@@ -59,7 +62,16 @@ export default class extends WeElement {
 
         //props 中如果是非object类型在update过程中会引起值的回退
         //增加props 绑定可以将需要保持状态的值封装成对象传值
-        let $props = this.props.props
+        let $props = this.props.props??this.getAttribute("props")
+        //处理html标签绑定
+        if (typeof $props === "string") {
+            const host = getHost(this)
+            try {
+                $props = get(host, $props)
+            } catch (exc) {
+                console.warn("parent host can not find props settings", exc)
+            }
+        }
         if ($props && typeof $props === "object") {
             this.$props = $props
             for (let pp in this.props) {
