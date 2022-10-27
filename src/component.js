@@ -65,7 +65,7 @@ export default class extends WeElement {
         let $props = this.props.props ?? this.getAttribute("props")
         //处理html标签绑定
         if (typeof $props === "string") {
-            const host = getHost(this)
+            const host = getHost(this) ?? options.root //没有父节点在window对象中找
             try {
                 $props = get(host, $props)
             } catch (exc) {
