@@ -402,7 +402,7 @@ export default class extends WeElement {
         })
         const handler = this.props[`on${capitalize(name)}`]
         if (typeof handler === "function") {
-            return handler(customEvent)
+            return handler(customEvent, this)
         } else {
             return this.dispatchEvent(customEvent)
         }
