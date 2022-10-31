@@ -45,7 +45,7 @@ import { purgeCSSSS, purgeCSS } from './stylesheet'
 
 import { observe, unobserve } from "observing"
 
-import './binding'
+import 'omi-binding'
 export {
     tag,
     WeElement,

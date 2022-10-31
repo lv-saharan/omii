@@ -3,6 +3,8 @@ omi + i
 
 omii更多关注 esmodule的项目开发。
 
+支持微前端，实现模块动态加载，增量开发。
+
 
 # getting start
 

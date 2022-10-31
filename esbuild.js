@@ -2,6 +2,7 @@
 import pkg from './package.json'  assert { type: "json" }
 import esbuild from 'esbuild'
 import { dev } from "local-dev-server"
+import path from "path"
 const [mode] = process.argv.splice(2);
 //let outfile = `../es-lib/omii/${pkg.version}/omii.js`;
 const outfile = `./dist/omii.js`;
@@ -12,7 +13,15 @@ const options = {
     format: "esm",
     bundle: true,
     sourcemap: true,
-    minify: true
+    minify: true,
+    plugins: [{
+        name: 'omi-map',
+        setup(build) {
+            build.onResolve({ filter: /omi\/src\/extend/ }, args => {
+                return { path: path.resolve('./src/extend.js') }
+            })
+        },
+    }],
 }
 
 
@@ -31,5 +40,5 @@ if (mode == "dev") {
         }
     })
 } else {
-    esbuild.buildSync(options)
+    esbuild.build(options)
 }
