@@ -60,28 +60,7 @@ export default class extends WeElement {
         //////////////////////////////////////////////////////////
         this.attrsToProps()
 
-        //props 中如果是非object类型在update过程中会引起值的回退
-        //增加props 绑定可以将需要保持状态的值封装成对象传值
-        let $props = this.props.props ?? this.getAttribute("props")
-        //处理html标签绑定
-        if (typeof $props === "string") {
-            const host = getHost(this) ?? options.root //没有父节点在window对象中找
-            try {
-                $props = get(host, $props)
-            } catch (exc) {
-                console.warn("parent host can not find props settings", exc)
-            }
-        }
-        if ($props && typeof $props === "object") {
-            this.$props = $props
-            for (let pp in this.props) {
-                if (pp !== "props" && pp !== "children" && !$props.hasOwnProperty(pp)) {
-                    $props[pp] = this.props[pp]
-                }
-            }
-        } else {
-            this.$props = this.props
-        }
+        this.mixProps()
 
         let shadowRoot
         if (this.constructor.isLightDom) {
@@ -286,6 +265,7 @@ export default class extends WeElement {
             await this.beforeRender()
 
             this.attrsToProps(ignoreAttrs)
+            this.mixProps()
             const rendered = await this.render(this.props, this.store)
             await this.rendered()
             await this.updateStyle()
@@ -327,7 +307,31 @@ export default class extends WeElement {
         })
         this.update(ignoreAttrs, updateSelf)
     }
-
+    
+    mixProps() {
+        //props 中如果是非object类型在update过程中会引起值的回退
+        //增加props 绑定可以将需要保持状态的值封装成对象传值
+        let $props = this.props.props ?? this.getAttribute("props")
+        //处理html标签绑定
+        if (typeof $props === "string") {
+            const host = getHost(this) ?? options.root //没有父节点在window对象中找
+            try {
+                $props = get(host, $props)
+            } catch (exc) {
+                console.warn("parent host can not find props settings", exc)
+            }
+        }
+        if ($props && typeof $props === "object") {
+            this.$props = $props
+            for (let pp in this.props) {
+                if (pp !== "props" && pp !== "children" && !$props.hasOwnProperty(pp)) {
+                    $props[pp] = this.props[pp]
+                }
+            }
+        } else {
+            this.$props = this.props
+        }
+    }
     attrsToProps(ignoreAttrs) {
         if (ignoreAttrs || this.props.ignoreAttrs) return
         const ele = this
@@ -377,6 +381,8 @@ export default class extends WeElement {
                 }
             }
         })
+
+
     }
 
     /**
