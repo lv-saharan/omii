@@ -307,7 +307,7 @@ export default class extends WeElement {
         })
         this.update(ignoreAttrs, updateSelf)
     }
-    
+
     mixProps() {
         //props 中如果是非object类型在update过程中会引起值的回退
         //增加props 绑定可以将需要保持状态的值封装成对象传值
@@ -370,7 +370,8 @@ export default class extends WeElement {
                         }
                         break
                 }
-            } else {
+                //如果有定义的属性则不能覆盖
+            } else if (!Reflect.has(ele, key) || Reflect.hasOwnProperty(ele, key)) {
                 if (
                     ele.constructor.defaultProps &&
                     ele.constructor.defaultProps.hasOwnProperty(key)
