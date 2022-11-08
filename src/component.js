@@ -94,8 +94,10 @@ export default class extends WeElement {
         } else {
             this.rootNode && shadowRoot.appendChild(this.rootNode)
         }
-        await this.installed()
+        //isInstalled 需要在installed事件之前设置
+        //路由时发现的问题
         this.isInstalled = true
+        await this.installed()
         //防止没有初始化完成时调用update
         // this._willUpdate = false
         // if (this.#waitingUpdate !== false) {

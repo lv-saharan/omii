@@ -1,6 +1,6 @@
 {
   "name": "@lv-saharan/omii",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "OMII,OMI + I ,quick web framework!",
   "main": "src/omii.js",
   "type": "module",
@@ -48,7 +48,7 @@
     "dynamic-apis": "^1.0.7",
     "htm": "^3.1.1",
     "observing": "^1.0.2",
-    "omi-binding": "^1.0.7",
+    "omi-binding": "^1.0.8",
     "omi-router": "^3.0.2",
     "throttle-debounce": "^5.0.0",
     "weakmap-polyfill": "^2.0.4"
