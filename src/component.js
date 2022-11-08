@@ -56,7 +56,7 @@ export default class extends WeElement {
 
     async connectedCallback() {
         //防止没有初始化完成时调用update
-        this._willUpdate = true
+        // this._willUpdate = true
         //////////////////////////////////////////////////////////
         this.attrsToProps()
 
@@ -97,10 +97,10 @@ export default class extends WeElement {
         await this.installed()
         this.isInstalled = true
         //防止没有初始化完成时调用update
-        this._willUpdate = false
-        if (this.#waitingUpdate !== false) {
-            this.#waitingUpdate()
-        }
+        // this._willUpdate = false
+        // if (this.#waitingUpdate !== false) {
+        //     this.#waitingUpdate()
+        // }
         //////////////////////////////////////////////////////////
         this.fire("installed")
 
@@ -249,6 +249,7 @@ export default class extends WeElement {
 
     #waitingUpdate = false
     async update(ignoreAttrs, updateSelf) {
+        if (!this.isInstalled) return
         if (this._willUpdate === true) {
             if (this.#waitingUpdate === false) {
                 this.#waitingUpdate = () => {
@@ -294,7 +295,7 @@ export default class extends WeElement {
         await this.update(true, true)
     }
 
-    update$Props(obj, ignoreAttrs = true, updateSelf = false, updateAttrs = false) {
+    update$Props(obj, { ignoreAttrs = true, updateSelf = false, updateAttrs = false } = {}) {
         Object.keys(obj).forEach(key => {
             let value = obj[key]
             this.$props[key] = value
@@ -308,6 +309,11 @@ export default class extends WeElement {
         this.update(ignoreAttrs, updateSelf)
     }
 
+    #$props
+
+    get $props() {
+        return this.#$props ?? this.props
+    }
     mixProps() {
         //props 中如果是非object类型在update过程中会引起值的回退
         //增加props 绑定可以将需要保持状态的值封装成对象传值
@@ -322,14 +328,14 @@ export default class extends WeElement {
             }
         }
         if ($props && typeof $props === "object") {
-            this.$props = $props
+            this.#$props = $props
             for (let pp in this.props) {
                 if (pp !== "props" && pp !== "children" && !$props.hasOwnProperty(pp)) {
                     $props[pp] = this.props[pp]
                 }
             }
         } else {
-            this.$props = this.props
+            this.#$props = this.props
         }
     }
     attrsToProps(ignoreAttrs) {
