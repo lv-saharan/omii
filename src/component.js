@@ -13,6 +13,10 @@ const adoptedStyleSheetsMap = new WeakMap()
 // console.log(chromeVersion, "如果小于99，adoptedStylesheets需要用数组赋值")
 //小程序目前也只支持adoptedStylesheets数组赋值
 export default class extends WeElement {
+    constructor() {
+        super()
+        this.$props = this.props
+    }
     #store = null
 
     get store() {
@@ -316,6 +320,7 @@ export default class extends WeElement {
         if (typeof $props === "string") {
             const host = getHost(this) ?? options.root //没有父节点在window对象中找
             try {
+                this.$props
                 $props = get(host, $props)
             } catch (exc) {
                 console.warn("parent host can not find props settings", exc)
