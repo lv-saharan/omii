@@ -297,7 +297,7 @@ export default class extends WeElement {
         await this.update(true, true)
     }
 
-    update$Props(obj, { ignoreAttrs = true, updateSelf = false, updateAttrs = false } = {}) {
+    async update$Props(obj, { ignoreAttrs = true, updateSelf = false, updateAttrs = false } = {}) {
         Object.keys(obj).forEach(key => {
             let value = obj[key]
             this.$props[key] = value
@@ -308,7 +308,7 @@ export default class extends WeElement {
                 this.pureSetAttribute(key, value)
             }
         })
-        this.update(ignoreAttrs, updateSelf)
+        await this.update(ignoreAttrs, updateSelf)
     }
 
     #$props
