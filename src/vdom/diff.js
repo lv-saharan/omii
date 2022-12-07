@@ -10,11 +10,11 @@ export const mounts = []
 /** Diff recursion count, used to track the end of the diff cycle. */
 export let diffLevel = 0
 
-/** Global flag indicating if the diff is currently within an SVG */
-let isSvgMode = false
+// /** Global flag indicating if the diff is currently within an SVG */
+// let isSvgMode = false
 
-/** Global flag indicating if the diff is performing hydration */
-let hydrating = false
+// /** Global flag indicating if the diff is performing hydration */
+// let hydrating = false
 
 /** convert  vnode  function to object */
 const purgeVNode = (vnode, args) => {
@@ -100,14 +100,22 @@ export async function diff(dom, vnode, parent, component, updateSelf) {
   // first render return undefined
   if (!dom && !vnode) return
   // diffLevel having been 0 here indicates initial entry into the diff (not a subdiff)
-  let ret
-  if (!diffLevel++) {
-    // when first starting the diff, check if we're diffing an SVG or within an SVG
-    isSvgMode = parent != null && parent.ownerSVGElement !== undefined
 
-    // hydration is indicated by the existing element to be diffed not having a prop cache
-    hydrating = dom != null && !(ATTR_KEY in dom)
+  //diff应该是上下文的
+  const diffContext = {
+    hydrating: dom != null && !(ATTR_KEY in dom),
+    isSvgMode: parent != null && parent.ownerSVGElement !== undefined
   }
+
+
+  let ret
+  // if (!diffLevel++) {
+  //   // when first starting the diff, check if we're diffing an SVG or within an SVG
+  //   isSvgMode = parent != null && parent.ownerSVGElement !== undefined
+
+  //   // hydration is indicated by the existing element to be diffed not having a prop cache
+  //   hydrating = dom != null && !(ATTR_KEY in dom)
+  // }
   //dynamic vnode
   vnode = purgeVNode(vnode, { component })
   //////////////////////////////////////////////////////////////////////
@@ -123,13 +131,13 @@ export async function diff(dom, vnode, parent, component, updateSelf) {
     if (parent) {
       // don't use css and props.css when using h.f
       // diff node list and vnode list
-      await innerDiffNode(parent, vnode, hydrating, component, updateSelf)
+      await innerDiffNode(parent, vnode, diffContext.hydrating, component, updateSelf, diffContext)
     } else {
       // connectedCallback 的时候 parent 为 null
       ret = []
       for (let index = 0; index < vnode.length; index++) {
         const item = vnode[index]
-        let ele = await idiff(index === 0 ? dom : null, item, component, updateSelf)
+        let ele = await idiff(index === 0 ? dom : null, item, component, updateSelf, diffContext)
         ret.push(ele)
       }
       // vnode.forEach(async (item, index) => {
@@ -144,7 +152,7 @@ export async function diff(dom, vnode, parent, component, updateSelf) {
       for (let index = 0; index < dom.length; index++) {
         const one = dom[index]
         if (index === 0) {
-          ret = await idiff(one, vnode, component, updateSelf)
+          ret = await idiff(one, vnode, component, updateSelf, diffContext)
         } else {
           recollectNodeTree(one, false)
         }
@@ -157,28 +165,27 @@ export async function diff(dom, vnode, parent, component, updateSelf) {
       //   }
       // })
     } else {
-      ret = await idiff(dom, vnode, component, updateSelf)
+      ret = await idiff(dom, vnode, component, updateSelf, diffContext)
     }
     // append the element if its a new parent
     if (parent && ret.parentNode !== parent) parent.appendChild(ret)
   }
 
   // diffLevel being reduced to 0 means we're exiting the diff
-  if (!--diffLevel) {
-    hydrating = false
-    // invoke queued componentDidMount lifecycle methods
-  }
-
+  // if (!--diffLevel) {
+  //   hydrating = false
+  //   // invoke queued componentDidMount lifecycle methods
+  // }
   return ret
 }
 
 /** Internals of `diff()`, separated to allow bypassing diffLevel / mount flushing. */
-async function idiff(dom, vnode, component, updateSelf) {
+async function idiff(dom, vnode, component, updateSelf, diffContext) {
   if (dom && vnode && dom.props) {
     dom.props.children = vnode.children
   }
   let out = dom,
-    prevSvgMode = isSvgMode
+    prevSvgMode = diffContext.isSvgMode
 
   // empty values (null, undefined, booleans) render as empty Text nodes
   if (vnode == null || typeof vnode === 'boolean') vnode = ''
@@ -216,19 +223,19 @@ async function idiff(dom, vnode, component, updateSelf) {
   let vnodeName = vnode.nodeName
 
   // Tracks entering and exiting SVG namespace when descending through the tree.
-  isSvgMode =
+  diffContext.isSvgMode =
     vnodeName === 'svg'
       ? true
       : vnodeName === 'foreignObject'
         ? false
-        : isSvgMode
+        : diffContext.isSvgMode
 
   // If there's no existing element or it's the wrong type, create a new one:
   vnodeName = String(vnodeName)
   if (!dom || !isNamedNode(dom, vnodeName)) {
     out = createNode(
       vnodeName,
-      isSvgMode,
+      diffContext.isSvgMode,
       vnode.attributes && vnode.attributes.is && { is: vnode.attributes.is }
     )
 
@@ -260,7 +267,7 @@ async function idiff(dom, vnode, component, updateSelf) {
 
   // Optimization: fast-path for elements containing a single TextNode:
   if (
-    !hydrating &&
+    !diffContext.hydrating &&
     vchildren &&
     vchildren.length === 1 &&
     typeof vchildren[0] === 'string' &&
@@ -278,20 +285,21 @@ async function idiff(dom, vnode, component, updateSelf) {
       await innerDiffNode(
         out,
         vchildren,
-        hydrating || props.dangerouslySetInnerHTML != null,
+        diffContext.hydrating || props.dangerouslySetInnerHTML != null,
         component,
-        updateSelf
+        updateSelf,
+        diffContext
       )
     }
   }
 
   // Apply attributes/props from VNode to the DOM Element:
-  await diffAttributes(out, vnode.attributes, props, component, updateSelf)
+  await diffAttributes(out, vnode.attributes, props, component, updateSelf, diffContext)
   if (out.props) {
     out.props.children = vnode.children
   }
   // restore previous SVG mode: (in case we're exiting an SVG namespace)
-  isSvgMode = prevSvgMode
+  diffContext.isSvgMode = prevSvgMode
   //dynamic vnode
   vnode.setDom && vnode.setDom(out)
   /////////////////////////////////////////////////////////
@@ -303,7 +311,7 @@ async function idiff(dom, vnode, component, updateSelf) {
  *  @param {Array} vchildren    Array of VNodes to compare to `dom.childNodes`
  *  @param {Boolean} isHydrating  If `true`, consumes externally created elements similar to hydration
  */
-async function innerDiffNode(dom, vchildren, isHydrating, component, updateSelf) {
+async function innerDiffNode(dom, vchildren, isHydrating, component, updateSelf, diffContext) {
   let originalChildren = dom.childNodes,
     children = [],
     keyed = {},
@@ -379,7 +387,7 @@ async function innerDiffNode(dom, vchildren, isHydrating, component, updateSelf)
       }
 
       // morph the matched/found/created DOM child to match vchild (deep)
-      child = await idiff(child, vchild, component, updateSelf)
+      child = await idiff(child, vchild, component, updateSelf, diffContext)
 
       f = originalChildren[i]
       if (child && child !== dom && child !== f) {
@@ -447,7 +455,7 @@ export function removeChildren(node) {
  *  @param {Object} attrs    The desired end-state key-value attribute pairs
  *  @param {Object} old      Current/previous attributes (from previous VNode or element's prop cache)
  */
-async function diffAttributes(dom, attrs, old, component, updateSelf) {
+async function diffAttributes(dom, attrs, old, component, updateSelf, { isSvgMode }) {
   let name
   //let update = false
   let isWeElement = dom.update
