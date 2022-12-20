@@ -1,7 +1,7 @@
 # omii
 omi + i
 
-omii更多关注 esmodule的项目开发。
+告别臃肿，拥抱WebComponents
 
 支持微前端，实现模块动态加载，增量开发。
 
@@ -27,8 +27,9 @@ npm start
 
 
 # URL
-[OMII UI ,一点示例](http://omii.flatweb.net/usage/ui "title")
+[OMII UI](https://github.com/lv-saharan/omii-ui "title")
 
+[OMII UI ,一点示例](http://omii.flatweb.net/usage/ui "title")
 
 [OMII playground,一些实践](http://omii.flatweb.net "title")
 
