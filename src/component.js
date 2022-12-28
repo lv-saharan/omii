@@ -54,7 +54,13 @@ export default class extends WeElement {
         }
     }
 
+    #connected = false
+    /**
+     * 需要防止多次触发
+     */
     async connectedCallback() {
+        if (this.#connected === true) return
+        this.#connected = true
         //防止没有初始化完成时调用update
         // this._willUpdate = true
         //////////////////////////////////////////////////////////
@@ -449,5 +455,8 @@ export default class extends WeElement {
 
     rendered() { }
 
+    /**
+     * 禁止异步
+     */
     receiveProps() { }
 }
