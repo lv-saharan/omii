@@ -288,6 +288,7 @@ export default class extends WeElement {
       return;
     }
     this._willUpdate = true;
+    this.fire("beforeUpdate")
     try {
       await this.beforeUpdate();
       await this.beforeRender();
@@ -310,6 +311,8 @@ export default class extends WeElement {
         this.#waitingUpdate();
       }
       await this.updated();
+      this.fire("updated")
+
     }
   }
   lazyUpdate = throttle(
@@ -467,26 +470,26 @@ export default class extends WeElement {
     return (this.shadowRoot ?? this).querySelector(selector);
   }
 
-  beforeInstall() {}
+  beforeInstall() { }
 
-  install() {}
+  install() { }
 
-  afterInstall() {}
+  afterInstall() { }
 
-  installed() {}
+  installed() { }
 
-  uninstall() {}
+  uninstall() { }
 
-  beforeUpdate() {}
+  beforeUpdate() { }
 
-  updated() {}
+  updated() { }
 
-  beforeRender() {}
+  beforeRender() { }
 
-  rendered() {}
+  rendered() { }
 
   /**
    * 禁止异步
    */
-  receiveProps() {}
+  receiveProps() { }
 }
