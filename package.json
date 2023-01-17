@@ -1,6 +1,6 @@
 {
   "name": "@lv-saharan/omii",
-  "version": "1.1.3",
+  "version": "1.1.5",
   "description": "OMII,OMI + I ,quick web framework!",
   "main": "src/omii.js",
   "type": "module",

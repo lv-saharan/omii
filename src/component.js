@@ -62,8 +62,10 @@ export default class extends WeElement {
   #connected = false;
   /**
    * 需要防止多次触发
+   * connectedCallback 进行初始化
    */
   async connectedCallback() {
+
     if (this.#connected === true) return;
     this.#connected = true;
     //防止没有初始化完成时调用update
@@ -117,7 +119,21 @@ export default class extends WeElement {
     //////////////////////////////////////////////////////////
     this.#connected = false;
     this.fire("installed");
+    if (typeof this.#readyResolve === "function") {
+      this.#readyResolve()
+    }
   }
+  #readyResolve
+  waitingReady() {
+    if (this.isInstalled) return true
+    return new Promise(resolve => {
+      this.#readyResolve = () => {
+        resolve();
+        this.#readyResolve = null
+      }
+    })
+  }
+
   async disconnectedCallback() {
     await this.uninstall();
     this.isInstalled = false;
@@ -154,24 +170,25 @@ export default class extends WeElement {
   }
   async #initStyle() {
     if (this.constructor.isLightDom !== true) {
-      let cssss = adoptedStyleSheetsMap.get(this.constructor);
-      if (cssss === undefined) {
-        let resolves = [];
-        resolves.__r__ = true;
-        adoptedStyleSheetsMap.set(this.constructor, resolves);
-        cssss = await purgeCSSSS(this.constructor.css, this);
-        adoptedStyleSheetsMap.set(this.constructor, cssss);
-        resolves.forEach((resolve) => {
-          resolve(cssss);
-        });
-      } else if (cssss instanceof Array && cssss.__r__) {
-        let resolves = cssss;
-        cssss = await new Promise((resolve) => {
-          resolves.push(resolve);
-        });
+      let cachedCSSSS = adoptedStyleSheetsMap.get(this.constructor);
+      if (cachedCSSSS === undefined) {
+        cachedCSSSS = {
+          resolves: [],
+          cssss: false
+        }
+        adoptedStyleSheetsMap.set(this.constructor, cachedCSSSS);
+        cachedCSSSS.cssss = await purgeCSSSS(this.constructor.css, this);
+        for (let resolve of cachedCSSSS.resolves) {
+          resolve(cachedCSSSS.cssss)
+        }
+      } else if (cachedCSSSS.cssss === false) {
+        const cssss = await new Promise(resolve => {
+          cachedCSSSS.resolves.push(resolve)
+        })
       }
+
       this.shadowRoot.adoptedStyleSheets = [
-        ...cssss,
+        ...cachedCSSSS.cssss,
         this.#css.default_cssstylesheet,
         this.#css.props_cssstylesheet,
         this.themeCSSStyleSheet,
@@ -323,6 +340,10 @@ export default class extends WeElement {
     { noLeading: true }
   );
 
+  async forceUpdate() {
+    await this.update(true)
+  }
+
   async forceUpdateSelf() {
     await this.update(true, true);
   }
@@ -470,23 +491,23 @@ export default class extends WeElement {
     return (this.shadowRoot ?? this).querySelector(selector);
   }
 
-  beforeInstall() { }
+  async beforeInstall() { }
 
-  install() { }
+  async install() { }
 
-  afterInstall() { }
+  async afterInstall() { }
 
-  installed() { }
+  async installed() { }
 
-  uninstall() { }
+  async uninstall() { }
 
-  beforeUpdate() { }
+  async beforeUpdate() { }
 
-  updated() { }
+  async updated() { }
 
-  beforeRender() { }
+  async beforeRender() { }
 
-  rendered() { }
+  async rendered() { }
 
   /**
    * 禁止异步
