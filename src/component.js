@@ -119,20 +119,9 @@ export default class extends WeElement {
     //////////////////////////////////////////////////////////
     this.#connected = false;
     this.fire("installed");
-    if (typeof this.#readyResolve === "function") {
-      this.#readyResolve()
-    }
+
   }
-  #readyResolve
-  waitingReady() {
-    if (this.isInstalled) return true
-    return new Promise(resolve => {
-      this.#readyResolve = () => {
-        resolve();
-        this.#readyResolve = null
-      }
-    })
-  }
+
 
   async disconnectedCallback() {
     await this.uninstall();
