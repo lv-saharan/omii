@@ -2,7 +2,10 @@ import { define } from "./define"
 const classTagMap = new Map()
 const prefixMap = new Map()
 
-export default function (componentClass, tagPrefix = "oi-part") {
+let TagPrefix = "oi-part"
+
+export default function (componentClass, tagPrefix) {
+    tagPrefix = tagPrefix ?? TagPrefix
     if (classTagMap.has(componentClass)) {
         return classTagMap.get(componentClass)
     }
@@ -13,4 +16,8 @@ export default function (componentClass, tagPrefix = "oi-part") {
     prefixMap.set(tagPrefix, ++index)
     classTagMap.set(componentClass, tag)
     return tag
+}
+
+export function setTagPrefix(tagPrefix) {
+    TagPrefix = tagPrefix
 }

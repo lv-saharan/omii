@@ -33,7 +33,7 @@ import Component from './component'
 
 import { route } from 'omi-router/src'
 
-import uniqueTag from './uniqueTag'
+import uniqueTag, { setTagPrefix } from './uniqueTag'
 
 import { updateTargets } from './updateTargets'
 
@@ -74,6 +74,7 @@ export {
     apis,
     html,
     uniqueTag,
+    setTagPrefix,
     updateTargets,
     throttle,
     debounce,
@@ -81,7 +82,7 @@ export {
     purgeCSS,
     purgeCSSSS, observe, unobserve
 }
-const version = "1.1.5"
-const omii = options.root.omii = { ...options.root.omi, version, Component, route, apis, html, uniqueTag, updateTargets, throttle, debounce, setTheme, purgeCSS, purgeCSSSS, observe, unobserve }
+const version = "1.1.6"
+const omii = options.root.omii = { ...options.root.omi, version, Component, route, apis, html, uniqueTag, setTagPrefix, updateTargets, throttle, debounce, setTheme, purgeCSS, purgeCSSSS, observe, unobserve }
 export default omii
 
