@@ -118,3 +118,8 @@ export function removeItem(item, arr) {
     }
   }
 }
+export function createStyleSheet(style) {
+  const styleSheet = new CSSStyleSheet()
+  styleSheet.replaceSync(style)
+  return styleSheet
+}

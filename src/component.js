@@ -65,7 +65,6 @@ export default class extends WeElement {
    * connectedCallback 进行初始化
    */
   async connectedCallback() {
-
     if (this.#connected === true) return;
     this.#connected = true;
     //防止没有初始化完成时调用update
@@ -119,9 +118,7 @@ export default class extends WeElement {
     //////////////////////////////////////////////////////////
     this.#connected = false;
     this.fire("installed");
-
   }
-
 
   async disconnectedCallback() {
     await this.uninstall();
@@ -163,17 +160,17 @@ export default class extends WeElement {
       if (cachedCSSSS === undefined) {
         cachedCSSSS = {
           resolves: [],
-          cssss: false
-        }
+          cssss: false,
+        };
         adoptedStyleSheetsMap.set(this.constructor, cachedCSSSS);
         cachedCSSSS.cssss = await purgeCSSSS(this.constructor.css, this);
         for (let resolve of cachedCSSSS.resolves) {
-          resolve(cachedCSSSS.cssss)
+          resolve(cachedCSSSS.cssss);
         }
       } else if (cachedCSSSS.cssss === false) {
-        const cssss = await new Promise(resolve => {
-          cachedCSSSS.resolves.push(resolve)
-        })
+        const cssss = await new Promise((resolve) => {
+          cachedCSSSS.resolves.push(resolve);
+        });
       }
 
       this.shadowRoot.adoptedStyleSheets = [
@@ -294,7 +291,7 @@ export default class extends WeElement {
       return;
     }
     this._willUpdate = true;
-    this.fire("beforeUpdate")
+    this.fire("beforeUpdate");
     try {
       await this.beforeUpdate();
       await this.beforeRender();
@@ -317,8 +314,7 @@ export default class extends WeElement {
         this.#waitingUpdate();
       }
       await this.updated();
-      this.fire("updated")
-
+      this.fire("updated");
     }
   }
   lazyUpdate = throttle(
@@ -330,7 +326,7 @@ export default class extends WeElement {
   );
 
   async forceUpdate() {
-    await this.update(true)
+    await this.update(true);
   }
 
   async forceUpdateSelf() {
@@ -412,12 +408,13 @@ export default class extends WeElement {
             if (val[0] === ":") {
               ele.props[key] = getValByPath(val.substr(1), Omi.$);
             } else {
-              ele.props[key] = JSON.parse(
-                val
-                  .replace(/(['"])?([a-zA-Z0-9_-]+)(['"])?:([^\/])/g, '"$2":$4')
-                  .replace(/'([\s\S]*?)'/g, '"$1"')
-                  .replace(/,(\s*})/g, "$1")
-              );
+              try {
+                ele.props[key] = JSON.parse(val);
+              } catch (e) {
+                console.warn(
+                  `The ${key} object prop does not comply with the JSON specification, the incorrect string is [${val}].`
+                );
+              }
             }
             break;
         }
@@ -480,26 +477,26 @@ export default class extends WeElement {
     return (this.shadowRoot ?? this).querySelector(selector);
   }
 
-  async beforeInstall() { }
+  async beforeInstall() {}
 
-  async install() { }
+  async install() {}
 
-  async afterInstall() { }
+  async afterInstall() {}
 
-  async installed() { }
+  async installed() {}
 
-  async uninstall() { }
+  async uninstall() {}
 
-  async beforeUpdate() { }
+  async beforeUpdate() {}
 
-  async updated() { }
+  async updated() {}
 
-  async beforeRender() { }
+  async beforeRender() {}
 
-  async rendered() { }
+  async rendered() {}
 
   /**
    * 禁止异步
    */
-  receiveProps() { }
+  receiveProps() {}
 }
