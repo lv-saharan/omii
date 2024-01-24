@@ -24,7 +24,6 @@ import {
 } from './omi'
 
 import apis from "dynamic-apis"
-
 import htm from 'htm'
 
 const html = htm.bind(h)
@@ -82,7 +81,7 @@ export {
     purgeCSS,
     purgeCSSSS, observe, unobserve
 }
-const version = "1.1.16"
+const version = "1.1.17"
 const omii = options.root.omii = { ...options.root.omi, version, Component, route, apis, html, uniqueTag, setTagPrefix, updateTargets, throttle, debounce, setTheme, purgeCSS, purgeCSSSS, observe, unobserve }
 export default omii
 
